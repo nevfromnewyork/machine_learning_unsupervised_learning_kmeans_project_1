@@ -1,0 +1,41 @@
+# Import dependencies
+import pandas as pd
+from pathlib import Path
+import hvplot.pandas
+# Read in the CSV file as a Pandas DataFrame
+service_ratings_df = pd.read_csv(
+    Path("../Resources/service_ratings.csv")
+)
+
+# Review the DataFrame
+service_ratings_df.head()
+# Visualize a scatter plot of the data
+service_ratings_df.hvplot.scatter(x="mobile_app_rating", y="personal_banker_rating")
+## Run the k-means model with 2 clusters
+# Start by importing the K-means algorithm
+from sklearn.cluster import KMeans
+# Create and initialize the K-means model instance for 2 clusters
+model = KMeans(n_clusters=2, random_state=1)
+
+# Print the model
+model
+# Fit the data to the instance of the model
+model.fit(service_ratings_df)
+# Make predictions about the data clusters using the 
+# trained model
+customer_ratings = model.predict(service_ratings_df)
+
+# Print the predictions
+print(customer_ratings)
+# Add a column to the DataFrame that contains the 
+# customer_ratings information
+service_ratings_df['customer rating'] = customer_ratings
+
+# Review the DataFrame
+service_ratings_df.head()
+# Plot the data points based on the customer rating
+service_ratings_df.hvplot.scatter(
+    x="mobile_app_rating", 
+    y="personal_banker_rating", 
+    by="customer rating"
+)
